@@ -1,16 +1,8 @@
 import Koa from "koa";
-import "dotenv/config";
+import config from "./src/app/config.js";
 
-const app = new Koa({
-  proxy: true,
-});
+const app = new Koa();
 
-app.use(async (ctx) => {
-  ctx.body = {
-    msg: "Hello World",
-  };
-});
-
-app.listen(process.env.PORT, () => {
-  console.log(`应用启动于： http://localhost:${process.env.PORT}`);
+app.listen(config.APP_PORT, () => {
+  console.log(`应用启动于： http://localhost:${config.APP_PORT}`);
 });
