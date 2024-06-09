@@ -3,6 +3,9 @@ import userServices from "../services/user.services.js";
 
 const router = new Router();
 
+/**
+ * @description: 根据code获取token，用户不存在自动注册
+ */
 router.post("/getToken", async (ctx, next) => {
   const { code } = ctx.request.body;
   const { openid: openId } = await userServices.getOpenId({ code });
@@ -16,6 +19,17 @@ router.post("/getToken", async (ctx, next) => {
 
     user = newUser;
   }
+
+  ctx.body = user;
+});
+
+/**
+ * @description: 测试用根据openId获取token
+ */
+router.post("/getToken2", async (ctx, next) => {
+  const { openId } = ctx.request.body;
+
+  let user = await userServices.getUser({ openId });
 
   ctx.body = user;
 });
