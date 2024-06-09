@@ -3,10 +3,19 @@ import userServices from "../services/user.services.js";
 
 const router = new Router();
 
-router.post("/user", async (ctx, next) => {
-  const { name } = ctx.request.body;
+router.post("/getToken", async (ctx, next) => {
+  const { code } = ctx.request.body;
+  const { openid: openId } = await userServices.getOpenId({ code });
 
-  const user = await userServices.getUser({ name });
+  if (!openId) ctx.throw(400, "获取OpenId失败");
+
+  let user = await userServices.getUser({ openId });
+
+  if (!user) {
+    const newUser = await userServices.generateUser({ openId });
+
+    user = newUser;
+  }
 
   ctx.body = user;
 });
