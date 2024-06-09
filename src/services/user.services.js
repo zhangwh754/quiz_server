@@ -1,18 +1,21 @@
+import connection from "../app/database.js";
+
 class UserServices {
   constructor() {}
 
-  async getUser(userId) {
-    const user = {
-      id: userId,
-      name: "John Doe",
-      email: "john@doe.com",
-      password: "123456",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+  async getUser({ name }) {
+    const [results] = await connection.query(
+      `
+        SELECT
+          user_id, username, email, created_at
+        FROM Users
+          WHERE username = ?;
+      `,
+      [name]
+    );
 
-    return user;
+    return results[0];
   }
 }
 
-export default new UserServices()
+export default new UserServices();
